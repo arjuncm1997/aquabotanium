@@ -110,7 +110,8 @@ def registeraqua():
 
 @app.route('/uindex')
 def uindex():
-    return render_template("uindex.html")
+    pro = Products.query.all()
+    return render_template("uindex.html",pro=pro)
 
 @app.route('/sindex')
 def sindex():
@@ -262,3 +263,125 @@ def save_picture(form_picture):
     i.thumbnail(output_size)
     i.save(picture_path)
     return picture_fn
+
+
+
+@app.route('/uproducts')
+def uproducts():
+    return render_template("uproducts.html")
+
+
+@app.route('/ucartview')
+def ucartview():
+    cart= Cart.query.all()
+    return render_template("ucartview.html",cart=cart)
+
+@app.route('/uadd/<int:id>',methods=['GET','POST'])
+def uadd(id):
+    cart = Cart.query.get_or_404(id)
+    if request.method=='POST':
+        no= request.form['no']
+        print(no)
+        price = int(cart.price)*int(no)
+        new1 = Buyproduct(name=cart.name,brand=cart.brand,price=price,image=cart.image,qnty=no,bowner=current_user.id)
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/ucartbuy/'+str(new1.id))
+
+        except:
+            return 'not add'  
+
+@app.route('/ucartadd/<int:id>')
+def ucartadd(id):
+    cart = Products.query.get_or_404(id)
+    new = Cart(name = cart.name,brand= cart.brand,price=cart.price,image=cart.image,owner=current_user.id)
+    db.session.add(new)
+    db.session.commit()
+    return redirect('/uindex')
+    return render_template("ucartadd.html")
+
+@app.route('/ucartremove/<int:id>')
+def ucartremove(id):
+    delete = Cart.query.get_or_404(id)
+    try:
+        db.session.delete(delete)
+        db.session.commit()
+        return redirect('/ucartview')
+    except:
+        return 'can not delete'
+
+@app.route('/ucartbuy/<int:id>',methods=['GET','POST'])
+def ucartbuy(id):
+    buy = Buyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        name= request.form['name']
+        mobile= request.form['mobile']
+        address= request.form['address']
+        buy.delname=name
+        buy.delmobile=mobile
+        buy.deladdress = address
+        db.session.commit()
+        return redirect('/upayment/'+str(buy.id))
+    return render_template("ucartbuy.html",buy=buy)
+
+@app.route('/upayment/<int:id>')
+def upayment(id):
+    buy = Buyproduct.query.get_or_404(id)
+    return render_template("upayment.html",buy=buy)
+
+
+@app.route('/credit/<int:id>',methods=['GET','POST'])
+def credit(id):
+    buy1 = Buyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        name= request.form['name']
+        number= request.form['number']
+        cvv= request.form['cvv']
+        date= request.form['date']
+        buy1.status = 'complete'
+        buy1.payment = 'creditcard'
+        new1 = Credit(name=name,card=number,cvv=cvv,expdate=date,buyid=current_user.id)
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            sendmail()
+            return redirect('/sucess')
+
+        except:
+            return 'not add'  
+    return render_template("upayment.html")
+
+@app.route('/cod/<int:id>',methods=['GET','POST'])
+def cod(id):
+    buy2 = Buyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.status = 'complete'
+        buy2.payment = 'Cod'
+        try:
+            db.session.commit()
+            sendmail()
+            return redirect('/sucess')
+
+        except:
+            return 'not add'  
+    return render_template("upayment.html")
+
+
+@app.route('/sucess')
+def sucess():
+    return render_template("sucess.html")
+
+
+
+def sendmail():
+    msg = Message('successful',
+                  recipients=[current_user.email])
+    msg.body = f''' your transaction completed successfullyy '''
+    mail.send(msg)
+
+
+@app.route('/ubuyproduct')
+def ubuyproduct():
+    cart = Buyproduct.query.filter_by(bowner=current_user.id).all()
+    return render_template("ubuyproduct.html",cart=cart)
