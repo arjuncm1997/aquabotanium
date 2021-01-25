@@ -57,37 +57,47 @@
             <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
                <div class="shop_inner_inf">
                   <div class="privacy about">
-                     <h3>Pro<span>ducts</span></h3>
-                     <div class="checkout-right">
-                        <h4><span></span></h4>
-                        <table class="timetable_sub">
-                           <thead>
-                              <tr>
-                                 <th>Image</th>
-                                 <th>Name</th>
-                                 <th>Brand</th>
-                                 <th>Total Price</th>
-                                 <th>Payment</th>
-                                 <th>Delivery Status</th>
-                                 <th></th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                               {% for cart in cart %}
-                              <tr class="rem1">
-                                 <td class="invert-image"><a href="single.html"><img src="../static/pics/{{cart.image}}" style="width: 119px;height: 140px;" alt=" " class="img-responsive"></a></td>
-                                 <td class="invert"> {{cart.name}}</td>
-                                 <td class="invert">{{cart.brand}}</td>
-                                 <td class="invert">${{cart.price}}</td>
-                                 <td class="invert"> {{cart.payment}}</td>
-                                 <td class="invert">{{cart.delivery}}</td>
-                                <td class="invert"></td>
-                                </tr>
-                              {% endfor %}
-                           </tbody>
-                        </table>
+                     <div class="checkout-left">
+                        <div class="col-md-4 checkout-left-basket">
+                           <h4>TOTAL PRICE</h4>
+                           <ul>
+                              <li style="color: black;">Total <i>-</i> <span>${{buy.price}}.00</span></li>
+                           </ul>
+                        </div>
+                        <div class="col-md-8 address_form">
+                           <h4>Add a new Details</h4>
+                           <form action="" method="POST" class="creditly-card-form agileinfo_form">
+                              <section class="creditly-wrapper wrapper">
+                                 <div class="information-wrapper">
+                                    <div class="first-row form-group">
+                                       <div class="controls">
+                                          <label class="control-label">Full name: </label>
+                                          <input class="billing-address-name form-control" type="text" name="name" placeholder="Full name">
+                                       </div>
+                                       <div class="card_number_grids">
+                                          <div class="card_number_grid_left">
+                                             <div class="controls">
+                                                <label class="control-label">Mobile number:</label>
+                                                <input class="form-control" type="text" name="mobile" placeholder="Mobile number">
+                                             </div>
+                                          </div>
+                                          <div class="card_number_grid_right">
+                                             <div class="controls">
+                                                <label class="control-label">Address: </label>
+                                                <input class="form-control" type="text" name="address" placeholder="Address">
+                                             </div>
+                                          </div>
+                                          <div class="clear"> </div>
+                                       </div>
+                                    </div>
+                                    <button class="submit check_out" type="submit">Make a Payment</button>
+                                 </div>
+                              </section>
+                           </form>
+                        </div>
+                        <div class="clearfix"> </div>
+                        <div class="clearfix"></div>
                      </div>
-                     
                   </div>
                </div>
                <!-- //top products -->
@@ -97,46 +107,7 @@
       
       <!-- //footer -->
       <!-- Modal 1-->
-      <section class="checkout py-lg-4 py-md-3 py-sm-3 py-3">
-         <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
-            <div class="shop_inner_inf">
-               <div class="privacy about">
-                  <h3>Aquarium <span>Products</span></h3>
-                  <div class="checkout-right">
-                     <h4><span></span></h4>
-                     <table class="timetable_sub">
-                        <thead>
-                           <tr>
-                              <th>Image</th>
-                              <th>Name</th>
-                              <th>Brand</th>
-                              <th>Total Price</th>
-                              <th>Payment</th>
-                              <th>Delivery Status</th>
-                              <th></th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                            {% for pdt in pdt %}
-                           <tr class="rem1">
-                              <td class="invert-image"><a href="single.html"><img src="../static/pics/{{pdt.image}}" style="width: 119px;height: 140px;" alt=" " class="img-responsive"></a></td>
-                              <td class="invert"> {{pdt.name}}</td>
-                              <td class="invert">{{pdt.brand}}</td>
-                              <td class="invert">${{pdt.price}}</td>
-                              <td class="invert"> {{pdt.payment}}</td>
-                              <td class="invert">{{pdt.delivery}}</td>
-                             <td class="invert"></td>
-                             </tr>
-                           {% endfor %}
-                        </tbody>
-                     </table>
-                  </div>
-                  
-               </div>
-            </div>
-            <!-- //top products -->
-         </div>
-   </section>
+      
       <!-- //Modal 1-->
       <!--js working-->
       <script src='../static/js/jquery-2.2.3.min.js'></script>

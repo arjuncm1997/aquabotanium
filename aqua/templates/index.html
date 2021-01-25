@@ -65,7 +65,7 @@
                         <a href="/about" class="nav-link">About</a>
                      </li>
                      <li class="nav-item">
-                        <a href="" class="nav-link">Service</a>
+                        <a href="/gallery" class="nav-link">Gallery</a>
                      </li>
                      <li class="nav-item">
                         <a href="/contact" class="nav-link">Contact</a>
@@ -150,49 +150,20 @@
       <!-- about -->
       <section class="about py-lg-4 py-md-3 py-sm-3 py-3" id="about">
          <div class="container py-lg-5 py-md-5 py-sm-4 py-4">
-            <h3 class="title text-center mb-lg-5 mb-md-4  mb-sm-4 mb-3">Best Products</h3>
+            <h3 class="title text-center mb-lg-5 mb-md-4  mb-sm-4 mb-3">Aquarium Products</h3>
             <div class="row banner-below-w3l">
+               {% for aqua in aqua%}
                <div class="col-lg-4 col-md-6 col-sm-6 text-center banner-agile-flowers">
-                  <img src="../static/images/a1.jpg" class="img-thumbnail" alt="">
+                  <img src="../static/pics/{{aqua.image}}" class="img-thumbnail" alt="" style="width: 217px;height: 220px;">
                   <div class="banner-right-icon">
-                     <h4 class="pt-3">Baby Toys</h4>
+                     <h4 class="pt-3">{{aqua.name}}</h4>
+                     <h6 class="pt-3">{{aqua.price}}/-</h6>
+                  </div>
+                  <div class="outs_more-buttn">
+                     <a href="/login">Add to cart</a>
                   </div>
                </div>
-               <div class="col-lg-4 col-md-6 col-sm-6 text-center banner-agile-flowers">
-                  <img src="../static/images/a2.jpg" class="img-thumbnail" alt="">
-                  <div class="banner-right-icon">
-                     <h4 class="pt-3">Lite-Brite</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 col-sm-6 text-center banner-agile-flowers">
-                  <img src="../static/images/a3.jpg" class="img-thumbnail" alt="">
-                  <div class="banner-right-icon">
-                     <h4 class="pt-3">Key Toys</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 col-sm-6 mt-3 text-center banner-agile-flowers">
-                  <img src="../static/images/a4.jpg" class="img-thumbnail" alt="">
-                  <div class="banner-right-icon">
-                     <h4 class="pt-3">Play Toys</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 col-sm-6 mt-3 text-center banner-agile-flowers">
-                  <img src="../static/images/a5.jpg" class="img-thumbnail" alt="">
-                  <div class="banner-right-icon">
-                     <h4 class="pt-3">Gift Toys</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-md-6 col-sm-6 mt-3 text-center banner-agile-flowers">
-                  <img src="../static/images/a6.jpg" class="img-thumbnail" alt="">
-                  <div class="banner-right-icon">
-                     <h4 class="pt-3">Soft Toys</h4>
-                  </div>
-               </div>
-               <div class="toys-grids-upper">
-                  <div class="about-toys-off">
-                     <h2>Get Up to <span>70% Off </span>On Selected Toys</h2>
-                  </div>
-               </div>
+               {% endfor %}
             </div>
          </div>
       </section>
@@ -200,75 +171,23 @@
       <!--new Arrivals -->
       <section class="blog py-lg-4 py-md-3 py-sm-3 py-3" >
          <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
-            <h3 class="title clr text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">New Arrivals</h3>
+            <h3 class="title clr text-center mb-lg-5 mb-md-4 mb-sm-4 mb-3">Products</h3>
             <div class="slid-img">
                <ul id="flexiselDemo1">
+                 {% for pro in pro %}
                   <li>
                      <div class="agileinfo_port_grid">
-                        <img src="../static/images/a1.jpg" alt=" " class="img-fluid" />
+                        <img src="../static/pics/{{pro.image}}" style="width: 170px;height: 175px;" alt=" " class="img-fluid" />
                         <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
+                           <h4 class="pt-3">{{pro.name}}</h4>
+                           <h5 class="pt-3">{{pro.price}}/-</h5>
                         </div>
                         <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
+                           <a href="/login">Add to cart</a>
                         </div>
                      </div>
                   </li>
-                  <li>
-                     <div class="agileinfo_port_grid">
-                        <img src="../static/images/a2.jpg" alt=" " class="img-fluid" />
-                        <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
-                        </div>
-                        <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
-                        </div>
-                     </div>
-                  </li>
-                  <li>
-                     <div class="agileinfo_port_grid">
-                        <img src="../static/images/a3.jpg" alt=" " class="img-fluid" />
-                        <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
-                        </div>
-                        <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
-                        </div>
-                     </div>
-                  </li>
-                  <li>
-                     <div class="agileinfo_port_grid ">
-                        <img src="../static/images/a4.jpg" alt=" " class="img-fluid" />
-                        <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
-                        </div>
-                        <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
-                        </div>
-                     </div>
-                  </li>
-                  <li>
-                     <div class="agileinfo_port_grid">
-                        <img src="../static/images/a5.jpg" alt=" " class="img-fluid" />
-                        <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
-                        </div>
-                        <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
-                        </div>
-                     </div>
-                  </li>
-                  <li>
-                     <div class="agileinfo_port_grid ">
-                        <img src="../static/images/a6.jpg" alt=" " class="img-fluid" />
-                        <div class="banner-right-icon">
-                           <h4 class="pt-3">Soft Toys</h4>
-                        </div>
-                        <div class="outs_more-buttn">
-                           <a href="shop.html">Shop Now</a>
-                        </div>
-                     </div>
-                  </li>
+                  {% endfor %}
                </ul>
             </div>
          </div>

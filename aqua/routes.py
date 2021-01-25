@@ -13,7 +13,9 @@ from random import randint
 
 @app.route('/')
 def  index():
-    return render_template("index.html")
+    pro = Products.query.all()
+    aqua = Aquaproducts.query.all()
+    return render_template("index.html",pro = pro, aqua=aqua)
 
 @app.route('/about')
 def about():
@@ -80,6 +82,81 @@ def contact():
             return 'not add'  
     return render_template("contact.html")
 
+@app.route('/ucontact',methods=['GET', 'POST'])
+def ucontact():
+    if request.method=='POST':
+        name= request.form['name']
+        email= request.form['email']
+        phone= request.form['phone']
+        subject= request.form['subject']
+        message= request.form['message']
+        print(message)
+        new1 = Feedback(name=name,email=email,phone=phone,subject=subject,message=message,usertype='user')
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/uindex')
+
+        except:
+            return 'not add'  
+    return render_template("ucontact.html")
+
+@app.route('/aqcontact',methods=['GET', 'POST'])
+def aqcontact():
+    if request.method=='POST':
+        name= request.form['name']
+        email= request.form['email']
+        phone= request.form['phone']
+        subject= request.form['subject']
+        message= request.form['message']
+        print(message)
+        new1 = Feedback(name=name,email=email,phone=phone,subject=subject,message=message,usertype='aqua')
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/aqindex')
+
+        except:
+            return 'not add'  
+    return render_template("aqcontact.html")
+
+@app.route('/scontact',methods=['GET', 'POST'])
+def scontact():
+    if request.method=='POST':
+        name= request.form['name']
+        email= request.form['email']
+        phone= request.form['phone']
+        subject= request.form['subject']
+        message= request.form['message']
+        print(message)
+        new1 = Feedback(name=name,email=email,phone=phone,subject=subject,message=message,usertype='staff')
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/sindex')
+
+        except:
+            return 'not add'  
+    return render_template("scontact.html")
+
+@app.route('/gcontact',methods=['GET', 'POST'])
+def gcontact():
+    if request.method=='POST':
+        name= request.form['name']
+        email= request.form['email']
+        phone= request.form['phone']
+        subject= request.form['subject']
+        message= request.form['message']
+        print(message)
+        new1 = Feedback(name=name,email=email,phone=phone,subject=subject,message=message,usertype='guide')
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/gindex')
+
+        except:
+            return 'not add'  
+    return render_template("gcontact.html")
 
 @app.route('/registeruser',methods=['GET','POST'])
 def registeruser():
@@ -111,7 +188,8 @@ def registeraqua():
 @app.route('/uindex')
 def uindex():
     pro = Products.query.all()
-    return render_template("uindex.html",pro=pro)
+    aqua = Aquaproducts.query.all()
+    return render_template("uindex.html",pro=pro, aqua=aqua)
 
 @app.route('/sindex')
 def sindex():
@@ -135,7 +213,7 @@ def admin():
 def aguideadd():
     form=RegistrationguideForm()
     if form.validate_on_submit():
-        def randomString(stringLength=10):
+        def randomString(stringLength=5):
             letters = string.ascii_lowercase
             return ''.join(random.choice(letters) for i in range(stringLength))
         password =randomString()
@@ -167,7 +245,7 @@ def aguideview():
 def astaffadd():
     form=RegistrationguideForm()
     if form.validate_on_submit():
-        def randomString(stringLength=10):
+        def randomString(stringLength=5):
             letters = string.ascii_lowercase
             return ''.join(random.choice(letters) for i in range(stringLength))
         password =randomString()
@@ -266,6 +344,8 @@ def save_picture(form_picture):
 
 
 
+
+
 @app.route('/uproducts')
 def uproducts():
     return render_template("uproducts.html")
@@ -273,8 +353,9 @@ def uproducts():
 
 @app.route('/ucartview')
 def ucartview():
-    cart= Cart.query.all()
-    return render_template("ucartview.html",cart=cart)
+    cart= Cart.query.filter_by(owner=current_user.id).all()
+    aqcart = Aquacart.query.filter_by(owner=current_user.id).all()
+    return render_template("ucartview.html",cart=cart, aqcart=aqcart)
 
 @app.route('/uadd/<int:id>',methods=['GET','POST'])
 def uadd(id):
@@ -292,6 +373,22 @@ def uadd(id):
         except:
             return 'not add'  
 
+@app.route('/uaqadd/<int:id>',methods=['GET','POST'])
+def uaqadd(id):
+    cart = Aquacart.query.get_or_404(id)
+    if request.method=='POST':
+        no= request.form['no']
+        print(no)
+        price = int(cart.price)*int(no)
+        new1 = Aquabuyproduct(aqowner=cart.aqowner,name=cart.name,brand=cart.brand,price=price,image=cart.image,qnty=no,bowner=current_user.id)
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            return redirect('/uaqcartbuy/'+str(new1.id))
+
+        except:
+            return 'not add'  
+
 @app.route('/ucartadd/<int:id>')
 def ucartadd(id):
     cart = Products.query.get_or_404(id)
@@ -299,11 +396,28 @@ def ucartadd(id):
     db.session.add(new)
     db.session.commit()
     return redirect('/uindex')
-    return render_template("ucartadd.html")
+
+@app.route('/uaqcartadd/<int:id>')
+def uaqcartadd(id):
+    cart = Aquaproducts.query.get_or_404(id)
+    new = Aquacart(aqowner=cart.aqowner,name = cart.name,brand= cart.brand,price=cart.price,image=cart.image,owner=current_user.id)
+    db.session.add(new)
+    db.session.commit()
+    return redirect('/uindex')
 
 @app.route('/ucartremove/<int:id>')
 def ucartremove(id):
     delete = Cart.query.get_or_404(id)
+    try:
+        db.session.delete(delete)
+        db.session.commit()
+        return redirect('/ucartview')
+    except:
+        return 'can not delete'
+
+@app.route('/uaqcartremove/<int:id>')
+def uaqcartremove(id):
+    delete = Aquacart.query.get_or_404(id)
     try:
         db.session.delete(delete)
         db.session.commit()
@@ -325,10 +439,29 @@ def ucartbuy(id):
         return redirect('/upayment/'+str(buy.id))
     return render_template("ucartbuy.html",buy=buy)
 
+@app.route('/uaqcartbuy/<int:id>',methods=['GET','POST'])
+def uaqcartbuy(id):
+    buy = Aquabuyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        name= request.form['name']
+        mobile= request.form['mobile']
+        address= request.form['address']
+        buy.delname=name
+        buy.delmobile=mobile
+        buy.deladdress = address
+        db.session.commit()
+        return redirect('/uaqpayment/'+str(buy.id))
+    return render_template("uaqcartbuy.html",buy=buy)
+
 @app.route('/upayment/<int:id>')
 def upayment(id):
     buy = Buyproduct.query.get_or_404(id)
     return render_template("upayment.html",buy=buy)
+
+@app.route('/uaqpayment/<int:id>')
+def uaqpayment(id):
+    buy = Aquabuyproduct.query.get_or_404(id)
+    return render_template("uaqpayment.html",buy=buy)
 
 
 @app.route('/credit/<int:id>',methods=['GET','POST'])
@@ -352,6 +485,27 @@ def credit(id):
             return 'not add'  
     return render_template("upayment.html")
 
+@app.route('/aqcredit/<int:id>',methods=['GET','POST'])
+def aqcredit(id):
+    buy1 = Aquabuyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        name= request.form['name']
+        number= request.form['number']
+        cvv= request.form['cvv']
+        date= request.form['date']
+        buy1.status = 'complete'
+        buy1.payment = 'creditcard'
+        new1 = Aquacredit(aqowner=buy1.aqowner,name=name,card=number,cvv=cvv,expdate=date,buyid=current_user.id)
+        try:
+            db.session.add(new1)
+            db.session.commit()
+            sendmail()
+            return redirect('/sucess')
+
+        except:
+            return 'not add'  
+    return render_template("uaqpayment.html")
+
 @app.route('/cod/<int:id>',methods=['GET','POST'])
 def cod(id):
     buy2 = Buyproduct.query.get_or_404(id)
@@ -366,6 +520,21 @@ def cod(id):
         except:
             return 'not add'  
     return render_template("upayment.html")
+
+@app.route('/aqcod/<int:id>',methods=['GET','POST'])
+def aqcod(id):
+    buy2 = Aquabuyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.status = 'complete'
+        buy2.payment = 'Cod'
+        try:
+            db.session.commit()
+            sendmail()
+            return redirect('/sucess')
+
+        except:
+            return 'not add'  
+    return render_template("uaqpayment.html")
 
 
 @app.route('/sucess')
@@ -384,4 +553,256 @@ def sendmail():
 @app.route('/ubuyproduct')
 def ubuyproduct():
     cart = Buyproduct.query.filter_by(bowner=current_user.id).all()
-    return render_template("ubuyproduct.html",cart=cart)
+    pdt = Aquabuyproduct.query.filter_by(bowner=current_user.id).all()
+    return render_template("ubuyproduct.html",cart=cart,pdt=pdt)
+
+@app.route('/abuyproduct')
+def abuyproduct():
+    buy = Buyproduct.query.filter_by(status='complete',staff='no').all()
+    user = Login.query.filter_by(usertype='staff').all()
+    return render_template("abuyproduct.html",buy=buy,user=user)
+
+@app.route('/staffadd/<int:id>',methods=['GET','POST'])
+def staffadd(id):
+    buy = Buyproduct.query.filter_by(status='complete',staff='no').all()
+    user = Login.query.filter_by(usertype='staff').all()
+    buy2=Buyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.staff = 'add'
+        buy2.staffid = request.form['staff']
+        staf = Login.query.get_or_404(buy2.staffid)
+        buy2.staffname = staf.username
+        try:
+            db.session.commit()
+            return redirect('/admin')
+
+        except:
+            return 'not add' 
+    return render_template("abuyproduct.html",buy=buy,user=user)
+
+@app.route('/aboughtproduct')
+def aboughtproduct():
+    buy = Buyproduct.query.filter_by(status='complete',staff='add').all()
+    return render_template("aboughtproduct.html",buy=buy)
+
+@app.route('/spendingpdts')
+def spendingpdts():
+    buy = Buyproduct.query.filter_by(status='complete',staff='add',staffid=current_user.id).all()
+    return render_template("spendingpdts.html",buy=buy)
+
+@app.route('/saqpendingpdts')
+def saqpendingpdts():
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='add',staffid=current_user.id).all()
+    return render_template("saqpendingpdts.html",buy=buy)
+
+@app.route('/sdel/<int:id>',methods=['GET','POST'])
+def sdel(id):
+    buy = Buyproduct.query.filter_by(status='complete',staff='add',staffid=current_user.id).all()
+    buy2=Buyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.delivery = request.form['del']
+        try:
+            db.session.commit()
+            return redirect('/sindex')
+
+        except:
+            return 'not add' 
+    return render_template("spendingpdts.html",buy=buy)
+
+@app.route('/saqdel/<int:id>',methods=['GET','POST'])
+def saqdel(id):
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='add',staffid=current_user.id).all()
+    buy2=Aquabuyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.delivery = request.form['del']
+        try:
+            db.session.commit()
+            return redirect('/saqpendingpdts')
+
+        except:
+            return 'not add' 
+    return render_template("saqpendingpdts.html",buy=buy)
+
+
+@app.route('/aqproductadd',methods=['POST','GET'])
+def aqproductadd():
+    form=Product()
+    if form.validate_on_submit():
+        if form.pic.data:
+            pic = save_picture(form.pic.data)
+            view = pic
+        gallery = Aquaproducts(aqowner= current_user.id,name=form.name.data,brand=form.brand.data,price=form.price.data,image=view )
+       
+        db.session.add(gallery)
+        db.session.commit()
+        return redirect('/aqindex')
+            
+    return render_template('aqproductadd.html',form=form)
+
+@app.route('/aqproductview')
+def aqproductview():
+    pdt = Aquaproducts.query.filter_by(aqowner=current_user.id).all()
+    return render_template("aqproductview.html",pdt=pdt)
+
+@app.route('/aqproductupdate/<int:id>', methods=['GET', 'POST'])
+def aqproductupdate(id):
+    material = Aquaproducts.query.get_or_404(id)
+    form = Product()
+    if form.validate_on_submit():
+        if form.pic.data:
+            picture_file = save_picture(form.pic.data)
+            material.image = picture_file
+        material.name = form.name.data
+        material.brand = form.brand.data
+        material.price = form.price.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect('/aqproductview')
+    elif request.method == 'GET':
+        form.name.data = material.name
+        form.brand.data = material.brand
+        form.price.data = material.price
+    image_file = url_for('static', filename='pics/' + material.image)
+    return render_template('aqproductupdate.html',form=form, material=material)
+
+@app.route('/aqpdtremove/<int:id>')
+def aqpdtremove(id):
+    delete = Aquaproducts.query.get_or_404(id)
+    try:
+        db.session.delete(delete)
+        db.session.commit()
+        return redirect('/aqproductview')
+    except:
+        return 'can not delete'
+
+@app.route('/aaqproductview')
+def aaqproductview():
+    pdt = Aquaproducts.query.all()
+    return render_template("aaqproductview.html",pdt=pdt)
+
+
+
+@app.route('/aaqbuyproduct')
+def aaqbuyproduct():
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='no').all()
+    user = Login.query.filter_by(usertype='staff').all()
+    return render_template("aaqbuyproduct.html",buy=buy,user=user)
+
+@app.route('/staffaddaq/<int:id>',methods=['GET','POST'])
+def staffaddaq(id):
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='no').all()
+    user = Login.query.filter_by(usertype='staff').all()
+    buy2=Aquabuyproduct.query.get_or_404(id)
+    if request.method=='POST':
+        buy2.staff = 'add'
+        buy2.staffid = request.form['staff']
+        staf = Login.query.get_or_404(buy2.staffid)
+        buy2.staffname = staf.username
+        try:
+            db.session.commit()
+            return redirect('/admin')
+
+        except:
+            return 'not add' 
+    return render_template("aaqbuyproduct.html",buy=buy,user=user)
+
+@app.route('/aaqboughtproduct')
+def aaqboughtproduct():
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='add').all()
+    return render_template("aaqboughtproduct.html",buy=buy)
+
+@app.route('/aqboughtproduct')
+def aqboughtproduct():
+    buy = Aquabuyproduct.query.filter_by(status='complete',staff='add',aqowner = current_user.id).all()
+    return render_template("aqboughtproduct.html",buy=buy)
+
+
+@app.route('/apfeed')
+def apfeed():
+    feedback1=Feedback.query.filter_by(usertype='public').all()
+    return render_template("apfeed.html",feedback=feedback1)
+
+@app.route('/asfeed')
+def asfeed():
+    feedback1=Feedback.query.filter_by(usertype='staff').all()
+    return render_template("asfeed.html",feedback=feedback1)
+
+@app.route('/aufeed')
+def aufeed():
+    feedback1=Feedback.query.filter_by(usertype='user').all()
+    return render_template("aufeed.html",feedback=feedback1)
+
+@app.route('/aaqfeed')
+def aaqfeed():
+    feedback1=Feedback.query.filter_by(usertype='aqua').all()
+    return render_template("aaqfeed.html",feedback=feedback1)
+
+@app.route('/agfeed')
+def agfeed():
+    feedback1=Feedback.query.filter_by(usertype='guide').all()
+    return render_template("agfeed.html",feedback=feedback1)
+
+@app.route('/gclassadd',methods=['POST','GET'])
+def gclassadd():
+    form=Agentclass()
+    if form.validate_on_submit():
+        link =form.link.data
+        new=link.split('//')[1].lstrip().split('/')[1]
+        gallery = Classvideo(owner= current_user.id,desc=form.name.data,video=new)
+        print(new)
+        db.session.add(gallery)
+        db.session.commit()
+        return redirect('/gindex')
+            
+    return render_template('gclassadd.html',form=form)
+
+@app.route('/gclassview')
+def gclassview():
+    guide = Classvideo.query.all()
+    return render_template("gclassview.html",guide=guide)
+
+
+@app.route('/gclassdelete/<int:id>')
+def gclassdelete(id):
+    delete = Classvideo.query.get_or_404(id)
+    try:
+        db.session.delete(delete)
+        db.session.commit()
+        return redirect('/gclassview')
+    except:
+        return 'can not delete'
+
+@app.route('/uclassview')
+def uclassview():
+    guide = Classvideo.query.all()
+    return render_template("uclassview.html",guide=guide)
+
+@app.route('/uprofile/<int:id>',methods=['GET','POST'])
+def uprofile(id):
+    form = Profile()
+    login = Login.query.get_or_404(id)
+    if form.validate_on_submit():
+        if form.pic.data:
+            picture_file = save_picture(form.pic.data)
+            login.image_file = picture_file
+        login.username = form.username.data
+        login.address = form.address.data
+        login.phone = form.phone.data
+        login.email = form.email.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect('/uindex')
+    elif request.method == 'GET':
+        form.username.data = login.username
+        form.address.data = login.address
+        form.phone.data = login.phone
+        form.email.data = login.email
+        form.pic.data = login.image_file
+    image_file = url_for('static', filename='pics/' + login.image_file)
+    return render_template("uprofile.html",form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect('/')

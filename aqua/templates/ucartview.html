@@ -57,7 +57,7 @@
             <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
                <div class="shop_inner_inf">
                   <div class="privacy about">
-                     <h3>Chec<span>kout</span></h3>
+                     <h3>Products<span></span></h3>
                      <div class="checkout-right">
                         <h4><span></span></h4>
                         <table class="timetable_sub">
@@ -98,42 +98,53 @@
             </div>
       </section>
       <!--subscribe-address-->
-      
-      <!-- //footer -->
-      <!-- Modal 1-->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-               <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
-               </div>
-               <div class="modal-body">
-                  <div class="register-form">
-                     <form action="#" method="post">
-                        <div class="fields-grid">
-                           <div class="styled-input">
-                              <input type="text" placeholder="Your Name" name="Your Name" required="">
-                           </div>
-                           <div class="styled-input">
-                              <input type="email" placeholder="Your Email" name="Your Email" required="">
-                           </div>
-                           <div class="styled-input">
-                              <input type="password" placeholder="password" name="password" required="">
-                           </div>
-                           <button type="submit" class="btn subscrib-btnn">Login</button>
-                        </div>
-                     </form>
+      <section class="checkout py-lg-4 py-md-3 py-sm-3 py-3">
+         <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
+            <div class="shop_inner_inf">
+               <div class="privacy about">
+                  <h3>Aquarium Products<span></span></h3>
+                  <div class="checkout-right">
+                     <h4><span></span></h4>
+                     <table class="timetable_sub">
+                        <thead>
+                           <tr>
+                              <th>Image</th>
+                              <th>Name</th>
+                              <th>Brand</th>
+                              <th>Price</th>
+                              <th>Qnty</th>
+                              <th></th>
+                              <th></th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                            {% for aqcart in aqcart %}
+                           <tr class="rem1">
+                              <td class="invert-image"><a href="single.html"><img src="../static/pics/{{aqcart.image}}" style="width: 119px;height: 140px;" alt=" " class="img-responsive"></a></td>
+                              <td class="invert"> {{aqcart.name}}</td>
+                              <td class="invert">{{aqcart.brand}}</td>
+                              <td class="invert">${{aqcart.price}}</td>
+                              <form action="/uaqadd/{{aqcart.id}}" method="POST">
+                              <td class="invert">
+                                  <input type="number" name="no">
+                             </td>
+                              <td class="invert"><a><button>BUY</button></a></td>
+                             </form>
+                              <td class="invert"><a href="/uaqcartremove/{{aqcart.id}}"><button>REMOVE</button></a> </td>
+                           </tr>
+                           {% endfor %}
+                        </tbody>
+                     </table>
                   </div>
-               </div>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  
                </div>
             </div>
+            <!-- //top products -->
          </div>
-      </div>
+   </section>
+      <!-- //footer -->
+      <!-- Modal 1-->
+     
       <!-- //Modal 1-->
       <!--js working-->
       <script src='../static/js/jquery-2.2.3.min.js'></script>

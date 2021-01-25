@@ -1,0 +1,54 @@
+{% extends 'glayout.html' %}
+{% block content %}
+
+
+
+<div class="table-responsive" id="sailorTableArea">
+    <table id="sailorTable" class="table table-striped table-bordered css-serial" width="100%" >
+ 
+        <thead>
+            <tr>
+                <th>No</th>
+                <th></th>
+            
+            </tr>
+        </thead>
+        <tbody>
+                {% for guide in guide %}
+            <tr>
+                <td></td>
+            
+            </tr>
+            <tr>
+                <td>{{guide.desc}}</td>
+            </tr>
+            <tr>
+                
+                    <th>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{guide.video}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>        
+                    </th>
+                    <td style="padding-right: 212px;"><a href="/gclassdelete/{{guide.id}}"><button>DELETE</button></a></td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+    </div>
+
+
+<style>
+
+.css-serial {
+  counter-reset: serial-number;  /* Set the serial number counter to 0 */
+}
+
+.css-serial td:first-child:before {
+  counter-increment: serial-number;  /* Increment the serial number counter */
+  content: counter(serial-number);  /* Display the counter */
+}
+
+
+</style>
+
+
+
+    {% endblock %}

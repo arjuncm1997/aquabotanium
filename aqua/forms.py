@@ -63,3 +63,19 @@ class Product(FlaskForm):
     price = StringField('Price',validators=[Length(min=1,max=15)])
     pic = FileField('Upload Picture', validators=[FileAllowed(['jpg', 'png','jpeg'])])
     submit = SubmitField('Save')
+
+
+class Agentclass(FlaskForm):
+    name = StringField('Description', validators=[DataRequired(), Length(min=1, max=40)])
+    link = StringField('Paste youtube link of vedio', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+class Profile(FlaskForm):
+    username = StringField('Username',
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    address = StringField('Address')
+    phone = StringField('Contact No')
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    pic = FileField('Upload Picture', validators=[FileAllowed(['jpg', 'png','jpeg'])])
+    submit = SubmitField('Submitt')
