@@ -79,3 +79,21 @@ class Profile(FlaskForm):
                         validators=[DataRequired(), Email()])
     pic = FileField('Upload Picture', validators=[FileAllowed(['jpg', 'png','jpeg'])])
     submit = SubmitField('Submitt')
+
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+    def validate_email(self, email):
+        user = Login.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('There is no account with that email. You must register first.')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm New Password',
+                                     validators=[ EqualTo('password')])
+    submit = SubmitField('Reset Password')
