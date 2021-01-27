@@ -917,3 +917,61 @@ def resettoken(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect('/login')
     return render_template('resetpassword.html', title='Reset Password', form=form)
+
+
+@app.route('/imageadd',methods=['POST','GET'])
+def imageadd():
+    form=Imageadd()
+
+    if form.validate_on_submit():
+
+        if form.pic.data:
+            pic_file = save_picture(form.pic.data)
+            view = pic_file
+        print(view)  
+    
+        gallery = Gallery(name=form.name.data,img=view )
+       
+        db.session.add(gallery)
+        db.session.commit()
+        print(gallery)
+        flash('image added')
+        return redirect('/viewimage')
+            
+    return render_template('imageadd.html',form=form)
+
+@app.route('/viewimage')
+def viewimage():
+    gallery=Gallery.query.all()
+    return render_template('viewimage.html',gallery=gallery)
+
+@app.route("/view/<int:id>", methods=['GET', 'POST'])
+def update_post(id):
+    gallery = Gallery.query.get_or_404(id)
+    form = Imageupdate()
+    if form.validate_on_submit():
+        if form.pic.data:
+            picture_file = save_picture(form.pic.data)
+            gallery.img = picture_file
+        gallery.name = form.name.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect('/viewimage')
+    elif request.method == 'GET':
+        form.name.data = gallery.name
+    image_file = url_for('static', filename='pics/' + gallery.img)
+    return render_template('galleryupdate.html',form=form)
+
+@app.route("/view/<int:id>/delete")
+def deleteimage(id):
+    gallery =Gallery.query.get_or_404(id)
+    db.session.delete(gallery)
+    db.session.commit()
+    flash('image has been deleted!', 'success')
+    return redirect('/viewimage')
+
+
+@app.route('/gallery')
+def gallery():
+    gal = Gallery.query.all()
+    return render_template('gallery.html',gal=gal)
